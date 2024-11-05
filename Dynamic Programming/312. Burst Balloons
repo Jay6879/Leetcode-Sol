@@ -1,0 +1,41 @@
+class Solution {
+    int[][] memo;
+    ArrayList<Integer> al;
+    public int maxCoins(int[] nums) {
+        memo = new int[nums.length+1][nums.length+1];
+        al = new ArrayList<>();
+        al.add(1);
+        for(int i=0;i<nums.length;i++){
+            al.add(nums[i]);
+        }
+        al.add(1);
+
+        for(int i=0;i<=nums.length;i++){
+            Arrays.fill(memo[i],-1);
+        }
+
+        return dp(1,nums.length);
+    }
+
+    public int dp(int i,int j){
+        if(i>j){
+            return 0;
+        }
+
+        if(memo[i][j]!=-1){
+            return memo[i][j];
+        }
+
+        int cost = Integer.MIN_VALUE;
+
+        for(int k=i;k<=j;k++){
+            int val = al.get(i-1)*al.get(k)*al.get(j+1);
+            val += dp(i,k-1)+dp(k+1,j);
+            cost = Math.max(cost,val);
+        }
+
+        memo[i][j] = cost;
+
+        return memo[i][j];
+    }
+}
